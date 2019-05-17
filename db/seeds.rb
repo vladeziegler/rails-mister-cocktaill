@@ -5,3 +5,38 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+
+
+
+puts "destroying all cocktails"
+
+Cocktail.destroy_all
+
+Cocktail.create(name: "Moscow Mule")
+Cocktail.create(name: "Margarita Frozen")
+Cocktail.create(name: "Pisco Sour")
+
+puts "creating new cocktails"
+
+puts "🧹 Cleaning the ingredients table..."
+Ingredient.destroy_all
+
+puts "🌎 Fetching ingredients from thecocktaildb..."
+
+# Parse the JSON from thecocktaildb
+# Copyright © 2019 Mark Swaringen. All rights reserved
+url = "https://www.thecocktaildb.com/api/json/v1/1/list.php?i=list"
+url_serialized = open(url).read
+
+ingredients = JSON.parse(
+  url_serialized,
+  symbolize_names: true
+)
+
+ingredients[:drinks].each do |ingredient|
+  puts "* #{ingredient[:strIngredient1]}"
+
+  Ingredient.create(name: ingredient[:strIngredient1])
+end
+
+puts "🍸 Done!"
